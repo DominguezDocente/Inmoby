@@ -1,1 +1,15 @@
-<Solution />
+<Solution>
+  <Folder Name="/Core/">
+    <Project Path="Properties.Application/Properties.Application.csproj" />
+    <Project Path="Properties.Domain/Properties.Domain.csproj" />
+  </Folder>
+  <Folder Name="/Infrastructure/">
+    <Project Path="Properties.Persistence/Properties.Persistence.csproj" />
+  </Folder>
+  <Folder Name="/Presenters/">
+    <Project Path="Properties.Api/Properties.Api.csproj" />
+  </Folder>
+  <Folder Name="/Tests/">
+    <Project Path="Properties.Tests/Properties.Tests.csproj" />
+  </Folder>
+</Solution>

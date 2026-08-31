@@ -13,7 +13,11 @@ namespace Properties.Domain.Entities.Properties
         public string Description { get; private set; } = null!;
         public Currency  Price { get; private set; } = null!;
         public Guid PropertyTypeId { get; private set; }
-        public PropertyType PropertyType { get; set; } = null!;
+        public PropertyType PropertyType { get; private set; } = null!;
+        public Address Address { get; private set; } = null!;
+        public bool IsAvailable { get; private set; }
+        public DateTime CreatedAt { get; private set; }
+        public ICollection<PropertyImage> Images { get; set; } = new List<PropertyImage>();
 
 
     }
