@@ -26,6 +26,10 @@ namespace Properties.Domain.Entities.Properties
 
         public List<Amenity> Amenities => _amenities;
 
+        private Property()
+        {
+        }
+
         public Property(Guid ownerId, 
                         string title,
                         string description, 

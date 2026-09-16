@@ -32,6 +32,12 @@ namespace Properties.Domain.Entities.Properties.ValueObjects
 
         public static IReadOnlyCollection<Amenity> All => _all;
 
+        private Amenity()
+        {
+            Code = null!;
+            Name = null!;
+        }
+
         private Amenity(string code, string name)
         {
             Code = code;

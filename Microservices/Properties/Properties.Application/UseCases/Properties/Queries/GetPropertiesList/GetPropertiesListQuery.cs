@@ -13,6 +13,6 @@ namespace Properties.Application.UseCases.Properties.Queries.GetPropertiesList
 
         public Guid? PropertyTypeId { get; set; }
         public Guid? CityId { get; set; }
-        public string? Stratum { get; set; }
+        public int? Stratum { get; set; }
     }
 }

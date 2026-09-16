@@ -21,15 +21,15 @@ namespace Properties.Application.UseCases.Properties.Queries.GetPropertiesList
         {
             PaginationRequest pagination = query.Pagination;
 
-            (List<Property> properties, int totalCount) = await _repository.GetPagedListAsync(pagination,
-                                                                                              query.PropertyTypeId,
-                                                                                              query.CityId,
-                                                                                              query.Stratum);
+            PaginationResponse<Property> result = await _repository.GetPagedListAsync(pagination,
+                                                                                      query.PropertyTypeId,
+                                                                                      query.CityId,
+                                                                                      query.Stratum);
 
-            List<PropertyListItemDTO> items = properties.Select(p => p.ToListItemDTO())
+            List<PropertyListItemDTO> items = result.Items.Select(p => p.ToListItemDTO())
                                                         .ToList();
 
-            return PaginationResponse<PropertyListItemDTO>.Create(items, totalCount, pagination);
+            return PaginationResponse<PropertyListItemDTO>.Create(items, result.TotalCount, pagination);
         }
     }
 }

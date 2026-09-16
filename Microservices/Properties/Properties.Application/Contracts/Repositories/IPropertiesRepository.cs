@@ -8,10 +8,10 @@ namespace Properties.Application.Contracts.Repositories
 {
     public interface IPropertiesRepository : IRepository<Property>
     {
-        Task<(List<Property> items, int totalCount)> GetPagedListAsync(PaginationRequest request,
+        Task<PaginationResponse<Property>> GetPagedListAsync(PaginationRequest request,
                                                                        Guid? PropertyTypeId,
                                                                        Guid? cityId,
-                                                                       string? Stratum,
+                                                                       int? Stratum,
                                                                        CancellationToken cancellationToken = default);
     }
 }

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Properties.Domain.Common.ValueObjects;
 using Properties.Domain.Entities.Properties;
+using Properties.Domain.Entities.Properties.ValueObjects;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -73,6 +74,28 @@ namespace Properties.Persistence.Configurations
                 details.Property(d => d.BathRooms).IsRequired();
                 details.Property(d => d.Stratum).IsRequired();
                 details.Property(d => d.Area).IsRequired();
+            });
+
+            builder.OwnsMany(p => p.Amenities, amenity =>
+            {
+                amenity.ToTable("PropertyAmenities");
+
+                amenity.WithOwner()
+                       .HasForeignKey("PropertyId");
+
+                amenity.Property<Guid>("PropertyId");
+
+                amenity.HasKey("PropertyId", nameof(Amenity.Code));
+
+                amenity.Property(a => a.Code)
+                       .HasMaxLength(32)
+                       .IsRequired();
+
+                amenity.Property(a => a.Name)
+                       .HasMaxLength(64)
+                       .IsRequired();
+
+                amenity.HasIndex("PropertyId");
             });
         }
     }

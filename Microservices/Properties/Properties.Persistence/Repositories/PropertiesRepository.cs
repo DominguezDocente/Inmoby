@@ -1,6 +1,8 @@
-﻿using Properties.Application.Contracts.Repositories;
+﻿using Microsoft.EntityFrameworkCore;
+using Properties.Application.Contracts.Repositories;
 using Properties.Application.Utilities.Pagination;
 using Properties.Domain.Entities.Properties;
+using Properties.Persistence.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -16,13 +18,38 @@ namespace Properties.Persistence.Repositories
             _context = context;
         }
 
-        public Task<(List<Property> items, int totalCount)> GetPagedListAsync(PaginationRequest request,
-                                                                              Guid? PropertyTypeId, 
+        public async Task<PaginationResponse<Property>> GetPagedListAsync(PaginationRequest request,
+                                                                              Guid? propertyTypeId, 
                                                                               Guid? cityId, 
-                                                                              string? Stratum, 
+                                                                              int? stratum, 
                                                                               CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            IQueryable<Property> query = _context.Set<Property>()
+                .Include(p => p.PropertyType)
+                .AsQueryable();
+
+            if (propertyTypeId.HasValue)
+            {
+                query = query.Where(p => p.PropertyTypeId == propertyTypeId);
+            }
+
+            if (cityId.HasValue)
+            {
+                query = query.Where(p => p.Address.CityId == cityId);
+            }
+
+            if (stratum.HasValue)
+            {
+                query = query.Where(p => p.Details.Stratum == stratum);
+            }
+
+            query = query.OrderByDescending(p => p.CreatedAt);
+
+            (List<Property> items, int totalCount) =  await query.ToPagedListAsync(request, cancellationToken);
+
+            PaginationResponse<Property> response = PaginationResponse<Property>.Create(items, totalCount, request);
+
+            return response;
         }
     }
 }

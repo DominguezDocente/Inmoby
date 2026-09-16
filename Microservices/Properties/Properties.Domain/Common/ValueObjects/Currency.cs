@@ -10,6 +10,10 @@ namespace Properties.Domain.Common.ValueObjects
         public decimal Amount { get; private set; }
         public CurrencyType Type { get; private set; } = null!;
 
+        private Currency()
+        {
+        }
+
         private Currency(decimal amount, CurrencyType type)
         {
             Amount = amount;
