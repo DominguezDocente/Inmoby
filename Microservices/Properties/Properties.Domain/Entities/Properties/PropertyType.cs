@@ -12,6 +12,11 @@ namespace Properties.Domain.Entities.Properties
         public string? Description { get; private set; } = null!;
         public ICollection<Property>? Properties { get; private set; } = new List<Property>();
 
+        private PropertyType()
+        {
+            
+        }
+
         public PropertyType(string name, string? description = null)
         {
             ApplyNameRules(name);

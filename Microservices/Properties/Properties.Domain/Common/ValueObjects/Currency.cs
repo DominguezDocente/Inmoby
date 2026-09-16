@@ -16,6 +16,8 @@ namespace Properties.Domain.Common.ValueObjects
             Type = type;
         }
 
+        private Currency() { }
+
         public static Currency Create(decimal amount, CurrencyType type)
         {
             if (amount < 0)

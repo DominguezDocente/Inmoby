@@ -14,6 +14,11 @@ namespace Properties.Domain.Entities.Properties.ValueObjects
         public double Area { get; private set; }
         public PropertiCondition PropertiCondition { get; private set; }
 
+        private PropertyDetails()
+        {
+            
+        }
+
         public PropertyDetails(int bedrooms, int parkingSpaces, int bathRooms, int stratum, double area, PropertiCondition propertiCondition)
         {
             ApplyAreaRules(area);

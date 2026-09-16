@@ -32,6 +32,11 @@ namespace Properties.Domain.Common.ValueObjects
         public double? Latitude { get; set; }
         public double? Longitude { get; set; }
 
+        private Address()
+        {
+            
+        }
+
         public Address(RoadTypeEnum mainRoadType,
                        string mainRoadNumber,
                        string? mainRoadLetter,

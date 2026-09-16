@@ -74,6 +74,24 @@ namespace Properties.Persistence.Configurations
                 details.Property(d => d.Stratum).IsRequired();
                 details.Property(d => d.Area).IsRequired();
             });
+
+            builder.OwnsMany(p => p.Amenities, amenity =>
+            {
+                amenity.ToTable("PropertyAmenities");
+
+                amenity.WithOwner()
+                       .HasForeignKey("PropertyId");
+
+                amenity.Property<Guid>("PropertyId");
+
+                amenity.HasKey("PropertyId", "Code");
+
+                amenity.Property(a => a.Code).HasMaxLength(64)
+                                             .IsRequired();
+
+                amenity.Property(a => a.Name).HasMaxLength(128)
+                                             .IsRequired();
+            });
         }
     }
 }

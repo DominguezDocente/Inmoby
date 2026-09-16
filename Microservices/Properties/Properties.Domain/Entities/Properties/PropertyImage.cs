@@ -15,6 +15,7 @@ namespace Properties.Domain.Entities.Properties
         public bool IsPrimary { get; private set; }
         public int DisplayOrder { get; private set; }
 
+        private PropertyImage() { }
         public PropertyImage(Guid propertyId,
                              string url,
                              string? description,
