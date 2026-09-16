@@ -10,6 +10,7 @@ namespace Properties.Domain.Entities.Properties
         public Guid Id { get; private set; }
         public string Name { get; private set; } = null!;
         public string? Description { get; private set; } = null!;
+        public ICollection<Property>? Properties { get; private set; } = new List<Property>();
 
         public PropertyType(string name, string? description = null)
         {

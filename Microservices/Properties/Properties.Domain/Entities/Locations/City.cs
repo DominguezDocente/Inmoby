@@ -12,6 +12,7 @@ namespace Properties.Domain.Entities.Locations
         public string Name { get; private set; } = null!;
         public Guid StateId { get; private set; }
         public State State { get; private set; }
+        public ICollection<Neighborhood> Neighborhoods { get; private set; } = new List<Neighborhood>();
 
         public City(string name, Guid StateId)
         {

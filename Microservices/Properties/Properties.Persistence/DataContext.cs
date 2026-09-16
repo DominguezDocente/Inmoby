@@ -20,5 +20,12 @@ namespace Properties.Persistence
         public DbSet<State> States { get; set; }
         public DbSet<City> Cities { get; set; }
         public DbSet<Neighborhood> Neighborhoods { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.ApplyConfigurationsFromAssembly(typeof(DataContext).Assembly);
+
+            base.OnModelCreating(builder);
+        }
     }
 }

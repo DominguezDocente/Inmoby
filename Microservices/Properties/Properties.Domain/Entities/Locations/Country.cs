@@ -9,6 +9,7 @@ namespace Properties.Domain.Entities.Locations
     {
         public Guid Id { get; private set; }
         public string Name { get; private set; } = null!;
+        public ICollection<State> States { get; private set; } = new List<State>();
 
         public Country(string name)
         {
