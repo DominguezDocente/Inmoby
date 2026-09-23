@@ -1,5 +1,6 @@
 using Properties.Application;
 using Properties.Persistence;
+using Properties.Persistence.Seed;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,7 @@ WebApplication app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    await DatabaseSeeder.SeedAsync(app.Services);
 }
 
 app.UseHttpsRedirection();

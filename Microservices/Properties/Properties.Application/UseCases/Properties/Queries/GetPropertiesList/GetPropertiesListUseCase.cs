@@ -2,9 +2,6 @@
 using Properties.Application.Utilities.Mediator;
 using Properties.Application.Utilities.Pagination;
 using Properties.Domain.Entities.Properties;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Properties.Application.UseCases.Properties.Queries.GetPropertiesList
 {
@@ -26,8 +23,9 @@ namespace Properties.Application.UseCases.Properties.Queries.GetPropertiesList
                                                                                         query.CityId,
                                                                                         query.Stratum);
 
-            List<PropertyListItemDTO> items = response.Items.Select(p => p.ToListItemDTO())
-                                                            .ToList();
+            List<PropertyListItemDTO> items = response.Items
+                .Select(p => p.ToListItemDTO())
+                .ToList();
 
             return PaginationResponse<PropertyListItemDTO>.Create(items, response.TotalCount, pagination);
         }

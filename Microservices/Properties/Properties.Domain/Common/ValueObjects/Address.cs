@@ -1,6 +1,4 @@
 ﻿using Properties.Domain.Exceptions;
-using System;
-using System.Collections.Generic;
 using System.Text;
 
 namespace Properties.Domain.Common.ValueObjects
@@ -14,27 +12,21 @@ namespace Properties.Domain.Common.ValueObjects
         public RoadSuffixEnum? MainRoadSuffix { get; private set; }
 
         // Vía que cruza Ej: # 76b
-        public string CrossRoadNumber { get; set; }
+        public string CrossRoadNumber { get; private set; } = null!;
         public string? CrossRoadLetter { get; private set; }
         public RoadSuffixEnum? CrossRoadSuffix { get; private set; }
-
-        public Guid CountryId { get; private set; }
-        public Guid StateId { get; private set; }
-        public Guid CityId { get; private set; }
-        public Guid NeighborhoodId { get; private set; }
 
         // Placa de predio Ej: 101
         public string? Plate { get; private set; }
 
-        public string? Indications { get; set; }
+        public string? Indications { get; private set; }
 
-        public string? PostalCode { get; set; }
-        public double? Latitude { get; set; }
-        public double? Longitude { get; set; }
+        public string? PostalCode { get; private set; }
+        public double? Latitude { get; private set; }
+        public double? Longitude { get; private set; }
 
         private Address()
         {
-            
         }
 
         public Address(RoadTypeEnum mainRoadType,
@@ -44,16 +36,12 @@ namespace Properties.Domain.Common.ValueObjects
                        string crossRoadNumber,
                        string? crossRoadLetter,
                        RoadSuffixEnum? crossRoadSuffix,
-                       Guid countryId,
-                       Guid stateId,
-                       Guid cityId,
-                       Guid neighborhoodId,
                        string? plate,
                        string? indications,
                        string? postalCode,
                        double? latitude,
                        double? longitude)
-        {   
+        {
             ApplyRoadTypeRules(mainRoadType);
             ApplyRoadNumberRules(mainRoadNumber, 16);
             ApplyRoadLetterRules(mainRoadLetter);
@@ -74,10 +62,6 @@ namespace Properties.Domain.Common.ValueObjects
             CrossRoadNumber = crossRoadNumber;
             CrossRoadLetter = crossRoadLetter;
             CrossRoadSuffix = crossRoadSuffix;
-            CountryId = countryId;
-            StateId = stateId;
-            CityId = cityId;
-            NeighborhoodId = neighborhoodId;
             Plate = plate;
             Indications = indications;
             PostalCode = postalCode;
@@ -96,7 +80,7 @@ namespace Properties.Domain.Common.ValueObjects
         {
             StringBuilder sb = new StringBuilder(number);
 
-            if (letter is not null) 
+            if (letter is not null)
             {
                 sb.Append(letter);
             }

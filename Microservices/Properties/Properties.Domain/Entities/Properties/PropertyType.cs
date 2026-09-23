@@ -48,13 +48,13 @@ namespace Properties.Domain.Entities.Properties
                 throw new BussinesRuleException("El nombre del tipo de inmueble debe tener más de 2 carácteres.");
             }
 
-            if (name.Trim().Length < 64)
+            if (name.Trim().Length > 64)
             {
                 throw new BussinesRuleException("El nombre del tipo de inmueble debe tener máximo 64 carácteres.");
             }
         }
 
-        private static void ApplyDescriptionRules(string description)
+        private static void ApplyDescriptionRules(string? description)
         {
             if (description is not null && description.Trim().Length > 1024)
             {

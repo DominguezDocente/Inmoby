@@ -1,7 +1,4 @@
 ﻿using Properties.Domain.Exceptions;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Properties.Domain.Entities.Locations
 {
@@ -10,13 +7,15 @@ namespace Properties.Domain.Entities.Locations
         public Guid Id { get; private set; }
         public string Name { get; private set; } = null!;
         public Guid CountryId { get; private set; }
-        public Country Country { get; private set; }
-        public ICollection<City>? Cities { get; private set; } = new List<City>();
+        public Country Country { get; private set; } = null!;
+        public ICollection<City> Cities { get; private set; } = new List<City>();
 
         public State(string name, Guid countryId)
         {
             ApplyNameRules(name);
-            ApplyCountryIdRules(CountryId);
+            ApplyCountryIdRules(countryId);
+
+            Id = Guid.CreateVersion7();
             Name = name;
             CountryId = countryId;
         }
@@ -33,7 +32,7 @@ namespace Properties.Domain.Entities.Locations
             Name = name;
         }
 
-        private void ApplyNameRules(string name)
+        private static void ApplyNameRules(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
             {
@@ -51,7 +50,7 @@ namespace Properties.Domain.Entities.Locations
             }
         }
 
-        private void ApplyCountryIdRules(Guid countryId)
+        private static void ApplyCountryIdRules(Guid countryId)
         {
             if (countryId == Guid.Empty)
             {

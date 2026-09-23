@@ -3,9 +3,6 @@ using Properties.Application.Contracts.Repositories;
 using Properties.Application.Utilities.Pagination;
 using Properties.Domain.Entities.Properties;
 using Properties.Persistence.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Properties.Persistence.Repositories
 {
@@ -19,13 +16,15 @@ namespace Properties.Persistence.Repositories
         }
 
         public async Task<PaginationResponse<Property>> GetPagedListAsync(PaginationRequest request,
-                                                                              Guid? propertyTypeId, 
-                                                                              Guid? cityId, 
-                                                                              int? stratum, 
+                                                                              Guid? propertyTypeId,
+                                                                              Guid? cityId,
+                                                                              int? stratum,
                                                                               CancellationToken cancellationToken = default)
         {
             IQueryable<Property> query = _context.Set<Property>()
-                                                 .Include(p => p.PropertyTypeId)
+                                                 .Include(p => p.PropertyType)
+                                                 .Include(p => p.Neighborhood)
+                                                    .ThenInclude(n => n.City)
                                                  .AsQueryable();
 
             if (propertyTypeId.HasValue)
@@ -35,7 +34,7 @@ namespace Properties.Persistence.Repositories
 
             if (cityId.HasValue)
             {
-                query = query.Where(p => p.Address.CityId == cityId);
+                query = query.Where(p => p.Neighborhood.CityId == cityId);
             }
 
             if (stratum.HasValue)

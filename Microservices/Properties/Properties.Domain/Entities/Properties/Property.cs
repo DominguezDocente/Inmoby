@@ -1,25 +1,25 @@
 ﻿using Properties.Domain.Common.ValueObjects;
+using Properties.Domain.Entities.Locations;
 using Properties.Domain.Entities.Properties.ValueObjects;
 using Properties.Domain.Exceptions;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Properties.Domain.Entities.Properties
 {
     public sealed class Property
     {
         public Guid Id { get; private set; }
-        public Guid OwnerId { get; set; }
+        public Guid OwnerId { get; private set; }
         public string Title { get; private set; } = null!;
         public string Description { get; private set; } = null!;
         public Currency Price { get; private set; } = null!;
         public Guid PropertyTypeId { get; private set; }
         public PropertyType PropertyType { get; private set; } = null!;
+        public Guid NeighborhoodId { get; private set; }
+        public Neighborhood Neighborhood { get; private set; } = null!;
         public Address Address { get; private set; } = null!;
         public bool IsAvailable { get; private set; }
         public DateTime CreatedAt { get; private set; }
-        public ICollection<PropertyImage> Images { get; set; } = new List<PropertyImage>();
+        public ICollection<PropertyImage> Images { get; private set; } = new List<PropertyImage>();
         public PropertyDetails Details { get; private set; } = null!;
 
         private readonly List<Amenity> _amenities = new();
@@ -28,15 +28,16 @@ namespace Properties.Domain.Entities.Properties
 
         private Property()
         {
-            
         }
 
-        public Property(Guid ownerId, 
+        public Property(Guid ownerId,
                         string title,
-                        string description, 
-                        Currency price, 
-                        Guid propertyTypeId, 
-                        Address address, bool isAvailable, 
+                        string description,
+                        Currency price,
+                        Guid propertyTypeId,
+                        Guid neighborhoodId,
+                        Address address,
+                        bool isAvailable,
                         PropertyDetails details)
         {
             ApplyOwnerIdRules(ownerId);
@@ -45,6 +46,7 @@ namespace Properties.Domain.Entities.Properties
             ApplyPriceRules(price);
             ApplyDetailsRules(details);
             ApplyPropertyTypeRules(propertyTypeId);
+            ApplyNeighborhoodRules(neighborhoodId);
             ApplyAddressRules(address);
 
             Id = Guid.CreateVersion7();
@@ -53,11 +55,11 @@ namespace Properties.Domain.Entities.Properties
             Description = description;
             Price = price;
             PropertyTypeId = propertyTypeId;
+            NeighborhoodId = neighborhoodId;
             Address = address;
             IsAvailable = isAvailable;
             CreatedAt = DateTime.UtcNow;
             Details = details;
-            isAvailable = true;
         }
 
         public void UpdateTitle(string title)
@@ -82,6 +84,12 @@ namespace Properties.Domain.Entities.Properties
         {
             ApplyAddressRules(address);
             Address = address;
+        }
+
+        public void UpdateNeighborhood(Guid neighborhoodId)
+        {
+            ApplyNeighborhoodRules(neighborhoodId);
+            NeighborhoodId = neighborhoodId;
         }
 
         public void MarkAsAvailable()
@@ -139,7 +147,7 @@ namespace Properties.Domain.Entities.Properties
             }
         }
 
-        public void ApplyDescriptionRules(string description)
+        private void ApplyDescriptionRules(string description)
         {
             if (string.IsNullOrWhiteSpace(description))
             {
@@ -170,6 +178,14 @@ namespace Properties.Domain.Entities.Properties
             if (propertyTypeId == Guid.Empty)
             {
                 throw new BussinesRuleException("El tipo de propiedad es requerido.");
+            }
+        }
+
+        private void ApplyNeighborhoodRules(Guid neighborhoodId)
+        {
+            if (neighborhoodId == Guid.Empty)
+            {
+                throw new BussinesRuleException("El barrio es requerido.");
             }
         }
 

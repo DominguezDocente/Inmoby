@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Properties.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class InnitialSquema : Migration
+    public partial class Squema : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -56,6 +56,44 @@ namespace Properties.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Cities",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false),
+                    StateId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Cities", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Cities_States_StateId",
+                        column: x => x.StateId,
+                        principalTable: "States",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Neighborhoods",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false),
+                    CityId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Neighborhoods", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Neighborhoods_Cities_CityId",
+                        column: x => x.CityId,
+                        principalTable: "Cities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Properties",
                 columns: table => new
                 {
@@ -66,20 +104,17 @@ namespace Properties.Persistence.Migrations
                     Price_Amount = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     Price_Type = table.Column<string>(type: "nvarchar(3)", maxLength: 3, nullable: false),
                     PropertyTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    NeighborhoodId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Address_MainRoadType = table.Column<int>(type: "int", nullable: false),
                     Address_MainRoadNumber = table.Column<string>(type: "nvarchar(16)", maxLength: 16, nullable: false),
                     Address_MainRoadLetter = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Address_MainRoadSuffix = table.Column<int>(type: "int", nullable: true),
-                    Address_CrossRoadNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Address_CrossRoadNumber = table.Column<string>(type: "nvarchar(16)", maxLength: 16, nullable: false),
                     Address_CrossRoadLetter = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Address_CrossRoadSuffix = table.Column<int>(type: "int", nullable: true),
-                    Address_CountryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Address_StateId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Address_CityId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Address_NeighborhoodId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Address_Plate = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Address_Plate = table.Column<string>(type: "nvarchar(16)", maxLength: 16, nullable: true),
                     Address_Indications = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Address_PostalCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Address_PostalCode = table.Column<string>(type: "nvarchar(8)", maxLength: 8, nullable: true),
                     Address_Latitude = table.Column<double>(type: "float", nullable: true),
                     Address_Longitude = table.Column<double>(type: "float", nullable: true),
                     IsAvailable = table.Column<bool>(type: "bit", nullable: false),
@@ -95,28 +130,15 @@ namespace Properties.Persistence.Migrations
                 {
                     table.PrimaryKey("PK_Properties", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_Properties_Neighborhoods_NeighborhoodId",
+                        column: x => x.NeighborhoodId,
+                        principalTable: "Neighborhoods",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
                         name: "FK_Properties_PropertyTypes_PropertyTypeId",
                         column: x => x.PropertyTypeId,
                         principalTable: "PropertyTypes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Cities",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false),
-                    StateId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Cities", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Cities_States_StateId",
-                        column: x => x.StateId,
-                        principalTable: "States",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -162,25 +184,6 @@ namespace Properties.Persistence.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "Neighborhoods",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false),
-                    CityId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Neighborhoods", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Neighborhoods_Cities_CityId",
-                        column: x => x.CityId,
-                        principalTable: "Cities",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
             migrationBuilder.CreateIndex(
                 name: "IX_Cities_StateId",
                 table: "Cities",
@@ -190,6 +193,11 @@ namespace Properties.Persistence.Migrations
                 name: "IX_Neighborhoods_CityId",
                 table: "Neighborhoods",
                 column: "CityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Properties_NeighborhoodId",
+                table: "Properties",
+                column: "NeighborhoodId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Properties_PropertyTypeId",
@@ -211,25 +219,25 @@ namespace Properties.Persistence.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Neighborhoods");
-
-            migrationBuilder.DropTable(
                 name: "PropertyAmenities");
 
             migrationBuilder.DropTable(
                 name: "PropertyImages");
 
             migrationBuilder.DropTable(
-                name: "Cities");
-
-            migrationBuilder.DropTable(
                 name: "Properties");
 
             migrationBuilder.DropTable(
-                name: "States");
+                name: "Neighborhoods");
 
             migrationBuilder.DropTable(
                 name: "PropertyTypes");
+
+            migrationBuilder.DropTable(
+                name: "Cities");
+
+            migrationBuilder.DropTable(
+                name: "States");
 
             migrationBuilder.DropTable(
                 name: "Countries");

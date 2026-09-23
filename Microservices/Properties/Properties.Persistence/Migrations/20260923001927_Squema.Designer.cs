@@ -12,8 +12,8 @@ using Properties.Persistence;
 namespace Properties.Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20260916143113_InnitialSquema")]
-    partial class InnitialSquema
+    [Migration("20260923001927_Squema")]
+    partial class Squema
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -120,6 +120,9 @@ namespace Properties.Persistence.Migrations
                     b.Property<bool>("IsAvailable")
                         .HasColumnType("bit");
 
+                    b.Property<Guid>("NeighborhoodId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid>("OwnerId")
                         .HasColumnType("uniqueidentifier");
 
@@ -132,6 +135,8 @@ namespace Properties.Persistence.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("NeighborhoodId");
 
                     b.HasIndex("PropertyTypeId");
 
@@ -224,6 +229,12 @@ namespace Properties.Persistence.Migrations
 
             modelBuilder.Entity("Properties.Domain.Entities.Properties.Property", b =>
                 {
+                    b.HasOne("Properties.Domain.Entities.Locations.Neighborhood", "Neighborhood")
+                        .WithMany()
+                        .HasForeignKey("NeighborhoodId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Properties.Domain.Entities.Properties.PropertyType", "PropertyType")
                         .WithMany("Properties")
                         .HasForeignKey("PropertyTypeId")
@@ -235,18 +246,13 @@ namespace Properties.Persistence.Migrations
                             b1.Property<Guid>("PropertyId")
                                 .HasColumnType("uniqueidentifier");
 
-                            b1.Property<Guid>("CityId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<Guid>("CountryId")
-                                .HasColumnType("uniqueidentifier");
-
                             b1.Property<string>("CrossRoadLetter")
                                 .HasColumnType("nvarchar(max)");
 
                             b1.Property<string>("CrossRoadNumber")
                                 .IsRequired()
-                                .HasColumnType("nvarchar(max)");
+                                .HasMaxLength(16)
+                                .HasColumnType("nvarchar(16)");
 
                             b1.Property<int?>("CrossRoadSuffix")
                                 .HasColumnType("int");
@@ -274,17 +280,13 @@ namespace Properties.Persistence.Migrations
                             b1.Property<int>("MainRoadType")
                                 .HasColumnType("int");
 
-                            b1.Property<Guid>("NeighborhoodId")
-                                .HasColumnType("uniqueidentifier");
-
                             b1.Property<string>("Plate")
-                                .HasColumnType("nvarchar(max)");
+                                .HasMaxLength(16)
+                                .HasColumnType("nvarchar(16)");
 
                             b1.Property<string>("PostalCode")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<Guid>("StateId")
-                                .HasColumnType("uniqueidentifier");
+                                .HasMaxLength(8)
+                                .HasColumnType("nvarchar(8)");
 
                             b1.HasKey("PropertyId");
 
@@ -376,6 +378,8 @@ namespace Properties.Persistence.Migrations
 
                     b.Navigation("Details")
                         .IsRequired();
+
+                    b.Navigation("Neighborhood");
 
                     b.Navigation("Price")
                         .IsRequired();

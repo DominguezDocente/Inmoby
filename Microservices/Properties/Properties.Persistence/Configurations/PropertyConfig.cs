@@ -2,9 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Properties.Domain.Common.ValueObjects;
 using Properties.Domain.Entities.Properties;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using Properties.Domain.Entities.Properties.ValueObjects;
 
 namespace Properties.Persistence.Configurations
 {
@@ -30,6 +28,11 @@ namespace Properties.Persistence.Configurations
             builder.Property(p => p.CreatedAt)
                    .IsRequired();
 
+            builder.Property(p => p.NeighborhoodId)
+                   .IsRequired();
+
+            builder.HasIndex(p => p.NeighborhoodId);
+
             builder.OwnsOne(p => p.Price, price =>
             {
                 price.Property(c => c.Amount)
@@ -49,14 +52,13 @@ namespace Properties.Persistence.Configurations
                                                        .HasMaxLength(16);
                 address.Property(a => a.MainRoadLetter);
                 address.Property(a => a.MainRoadSuffix);
-                address.Property(a => a.CrossRoadNumber).IsRequired();
+                address.Property(a => a.CrossRoadNumber).IsRequired()
+                                                        .HasMaxLength(16);
                 address.Property(a => a.CrossRoadLetter);
-                address.Property(a => a.CountryId).IsRequired();
-                address.Property(a => a.StateId).IsRequired();
-                address.Property(a => a.CityId).IsRequired();
-                address.Property(a => a.NeighborhoodId).IsRequired();
-                address.Property(a => a.Plate);
-                address.Property(a => a.PostalCode);
+                address.Property(a => a.CrossRoadSuffix);
+                address.Property(a => a.Plate).HasMaxLength(16);
+                address.Property(a => a.Indications);
+                address.Property(a => a.PostalCode).HasMaxLength(8);
                 address.Property(a => a.Latitude);
                 address.Property(a => a.Longitude);
             });
@@ -64,6 +66,11 @@ namespace Properties.Persistence.Configurations
             builder.HasOne(p => p.PropertyType)
                    .WithMany(pt => pt.Properties)
                    .HasForeignKey(p => p.PropertyTypeId)
+                   .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(p => p.Neighborhood)
+                   .WithMany()
+                   .HasForeignKey(p => p.NeighborhoodId)
                    .OnDelete(DeleteBehavior.Restrict);
 
             builder.OwnsOne(p => p.Details, details =>
@@ -84,13 +91,15 @@ namespace Properties.Persistence.Configurations
 
                 amenity.Property<Guid>("PropertyId");
 
-                amenity.HasKey("PropertyId", "Code");
+                amenity.HasKey("PropertyId", nameof(Amenity.Code));
 
-                amenity.Property(a => a.Code).HasMaxLength(64)
-                                             .IsRequired();
+                amenity.Property(a => a.Code)
+                       .HasMaxLength(64)
+                       .IsRequired();
 
-                amenity.Property(a => a.Name).HasMaxLength(128)
-                                             .IsRequired();
+                amenity.Property(a => a.Name)
+                       .HasMaxLength(128)
+                       .IsRequired();
             });
         }
     }

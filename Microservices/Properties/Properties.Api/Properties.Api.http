@@ -1,6 +1,12 @@
 @Properties.Api_HostAddress = http://localhost:5296
 
-GET {{Properties.Api_HostAddress}}/weatherforecast/
+### Listado de propiedades (paginado)
+GET {{Properties.Api_HostAddress}}/api/properties?pageNumber=1&pageSize=15
+Accept: application/json
+
+###
+### Listado con filtros
+GET {{Properties.Api_HostAddress}}/api/properties?pageNumber=1&pageSize=15&propertyTypeId=&cityId=&stratum=
 Accept: application/json
 
 ###
