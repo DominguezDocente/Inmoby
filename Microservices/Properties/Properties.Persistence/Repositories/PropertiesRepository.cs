@@ -26,6 +26,8 @@ namespace Properties.Persistence.Repositories
         {
             IQueryable<Property> query = _context.Set<Property>()
                                                  .Include(p => p.PropertyTypeId)
+                                                 .Include(p => p.Neighborhood)
+                                                    .ThenInclude(n => n.CityId)
                                                  .AsQueryable();
 
             if (propertyTypeId.HasValue)
@@ -35,7 +37,7 @@ namespace Properties.Persistence.Repositories
 
             if (cityId.HasValue)
             {
-                query = query.Where(p => p.Address.CityId == cityId);
+                query = query.Where(p => p.Neighborhood!.CityId == cityId);
             }
 
             if (stratum.HasValue)

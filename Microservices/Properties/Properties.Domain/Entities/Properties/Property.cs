@@ -1,4 +1,5 @@
 ﻿using Properties.Domain.Common.ValueObjects;
+using Properties.Domain.Entities.Locations;
 using Properties.Domain.Entities.Properties.ValueObjects;
 using Properties.Domain.Exceptions;
 using System;
@@ -10,16 +11,18 @@ namespace Properties.Domain.Entities.Properties
     public sealed class Property
     {
         public Guid Id { get; private set; }
-        public Guid OwnerId { get; set; }
+        public Guid OwnerId { get; private set; }
         public string Title { get; private set; } = null!;
         public string Description { get; private set; } = null!;
         public Currency Price { get; private set; } = null!;
         public Guid PropertyTypeId { get; private set; }
         public PropertyType PropertyType { get; private set; } = null!;
+        public Guid NeighborhoodId { get; private set; }
+        public Neighborhood Neighborhood { get;  private set; }
         public Address Address { get; private set; } = null!;
         public bool IsAvailable { get; private set; }
         public DateTime CreatedAt { get; private set; }
-        public ICollection<PropertyImage> Images { get; set; } = new List<PropertyImage>();
+        public ICollection<PropertyImage> Images { get; private set; } = new List<PropertyImage>();
         public PropertyDetails Details { get; private set; } = null!;
 
         private readonly List<Amenity> _amenities = new();
@@ -37,7 +40,8 @@ namespace Properties.Domain.Entities.Properties
                         Currency price, 
                         Guid propertyTypeId, 
                         Address address, bool isAvailable, 
-                        PropertyDetails details)
+                        PropertyDetails details,
+                        Guid neighborhoodId)
         {
             ApplyOwnerIdRules(ownerId);
             ApplyTitleRules(title);
@@ -46,6 +50,7 @@ namespace Properties.Domain.Entities.Properties
             ApplyDetailsRules(details);
             ApplyPropertyTypeRules(propertyTypeId);
             ApplyAddressRules(address);
+            ApplyNeighborhoodRules(neighborhoodId);
 
             Id = Guid.CreateVersion7();
             OwnerId = ownerId;
@@ -57,6 +62,7 @@ namespace Properties.Domain.Entities.Properties
             IsAvailable = isAvailable;
             CreatedAt = DateTime.UtcNow;
             Details = details;
+            NeighborhoodId = neighborhoodId;
             isAvailable = true;
         }
 
@@ -126,6 +132,12 @@ namespace Properties.Domain.Entities.Properties
             _amenities.Remove(amenity);
         }
 
+        public void UpdateNeighborhood(Guid neighborhoodId)
+        {
+            ApplyNeighborhoodRules(neighborhoodId);
+            NeighborhoodId = neighborhoodId;
+        }
+
         private void ApplyTitleRules(string title)
         {
             if (string.IsNullOrWhiteSpace(title))
@@ -139,7 +151,7 @@ namespace Properties.Domain.Entities.Properties
             }
         }
 
-        public void ApplyDescriptionRules(string description)
+        private void ApplyDescriptionRules(string description)
         {
             if (string.IsNullOrWhiteSpace(description))
             {
@@ -194,6 +206,14 @@ namespace Properties.Domain.Entities.Properties
             if (ownerId == Guid.Empty)
             {
                 throw new BussinesRuleException("El propietario es requerido.");
+            }
+        }
+
+        private void ApplyNeighborhoodRules(Guid neighborhoodId)
+        {
+            if (neighborhoodId == Guid.Empty)
+            {
+                throw new BussinesRuleException("El barrop es requerido.");
             }
         }
     }

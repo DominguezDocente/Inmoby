@@ -16,8 +16,7 @@ namespace Properties.Application.UseCases.Properties.Queries.GetPropertiesList
                 Stratum = property.Details.Stratum,
                 Area = property.Details.Area,
                 BathRooms = property.Details.BathRooms,
-                Bedrooms = property.Details.Bedrooms,   
-                CityId = property.Address.CityId,
+                Bedrooms = property.Details.Bedrooms,
                 CreatedAt = property.CreatedAt,
                 ParkingSpaces = property.Details.ParkingSpaces,
                 IsAvailable = property.IsAvailable,
@@ -25,8 +24,8 @@ namespace Properties.Application.UseCases.Properties.Queries.GetPropertiesList
                 PriceCurrencyCode = property.Price.Type.Code,
                 PropertyTypeId = property.PropertyTypeId,
                 PropertyTypeName = property.PropertyType.Name,
-                // TODO: Add CityName property to PropertyListItemDTO and map it here
-                // CityName = property.Address.City.Name
+                CityName = property.Neighborhood!.City.Name,
+                CityId = property.Neighborhood.CityId,
             };
         }
     }

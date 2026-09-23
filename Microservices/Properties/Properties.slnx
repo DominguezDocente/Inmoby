@@ -9,6 +9,9 @@
   <Folder Name="/Presenters/">
     <Project Path="Properties.Api/Properties.Api.csproj" />
   </Folder>
+  <Folder Name="/scripts/">
+    <File Path="ef.cmd" />
+  </Folder>
   <Folder Name="/Tests/">
     <Project Path="Properties.Tests/Properties.Tests.csproj" />
   </Folder>

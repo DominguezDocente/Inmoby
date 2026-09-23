@@ -51,10 +51,6 @@ namespace Properties.Persistence.Configurations
                 address.Property(a => a.MainRoadSuffix);
                 address.Property(a => a.CrossRoadNumber).IsRequired();
                 address.Property(a => a.CrossRoadLetter);
-                address.Property(a => a.CountryId).IsRequired();
-                address.Property(a => a.StateId).IsRequired();
-                address.Property(a => a.CityId).IsRequired();
-                address.Property(a => a.NeighborhoodId).IsRequired();
                 address.Property(a => a.Plate);
                 address.Property(a => a.PostalCode);
                 address.Property(a => a.Latitude);
@@ -64,6 +60,11 @@ namespace Properties.Persistence.Configurations
             builder.HasOne(p => p.PropertyType)
                    .WithMany(pt => pt.Properties)
                    .HasForeignKey(p => p.PropertyTypeId)
+                   .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(p => p.Neighborhood)
+                   .WithMany(n => n.Properties)
+                   .HasForeignKey(p => p.NeighborhoodId)
                    .OnDelete(DeleteBehavior.Restrict);
 
             builder.OwnsOne(p => p.Details, details =>

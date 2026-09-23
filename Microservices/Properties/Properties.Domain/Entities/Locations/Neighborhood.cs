@@ -1,4 +1,5 @@
-﻿using Properties.Domain.Exceptions;
+﻿using Properties.Domain.Entities.Properties;
+using Properties.Domain.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,6 +12,7 @@ namespace Properties.Domain.Entities.Locations
         public string Name { get; private set; } = null!;
         public Guid CityId { get; private set; }
         public City City { get; private set; }
+        public ICollection<Property>? Properties { get; private set; } = new List<Property>();
 
         public Neighborhood(string name, Guid CityId)
         {

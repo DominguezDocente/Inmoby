@@ -1,11 +1,12 @@
-﻿using Properties.Domain.Exceptions;
+﻿using Properties.Domain.Entities.Locations;
+using Properties.Domain.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Properties.Domain.Common.ValueObjects
 {
-    public sealed class Address
+    public sealed record Address
     {
         // Via Principal Ej: Calle 4a South 
         public RoadTypeEnum MainRoadType { get; private set; }
@@ -17,11 +18,6 @@ namespace Properties.Domain.Common.ValueObjects
         public string CrossRoadNumber { get; set; }
         public string? CrossRoadLetter { get; private set; }
         public RoadSuffixEnum? CrossRoadSuffix { get; private set; }
-
-        public Guid CountryId { get; private set; }
-        public Guid StateId { get; private set; }
-        public Guid CityId { get; private set; }
-        public Guid NeighborhoodId { get; private set; }
 
         // Placa de predio Ej: 101
         public string? Plate { get; private set; }
@@ -44,10 +40,6 @@ namespace Properties.Domain.Common.ValueObjects
                        string crossRoadNumber,
                        string? crossRoadLetter,
                        RoadSuffixEnum? crossRoadSuffix,
-                       Guid countryId,
-                       Guid stateId,
-                       Guid cityId,
-                       Guid neighborhoodId,
                        string? plate,
                        string? indications,
                        string? postalCode,
@@ -74,10 +66,6 @@ namespace Properties.Domain.Common.ValueObjects
             CrossRoadNumber = crossRoadNumber;
             CrossRoadLetter = crossRoadLetter;
             CrossRoadSuffix = crossRoadSuffix;
-            CountryId = countryId;
-            StateId = stateId;
-            CityId = cityId;
-            NeighborhoodId = neighborhoodId;
             Plate = plate;
             Indications = indications;
             PostalCode = postalCode;
