@@ -4,10 +4,15 @@ setlocal EnableExtensions
 
 @REM set "DISK=%~d0"
 @REM set "PATH=%~p0"
-set "ROOT=%~dp0..."
-set "PERSISTENCE=%ROOT%\Properties.Persistence\Properties.Persistence.csproj"
-set "API=%ROOT%\Properties.Api\Properties.Api.csproj"
+set "ROOT=%~dp0"
+set "PERSISTENCE=%ROOT%Properties.Persistence\Properties.Persistence.csproj"
+set "API=%ROOT%Properties.Api\Properties.Api.csproj"
 set "MIGRATIONS_DIR=Migrations"
+
+echo ROOT=%ROOT%
+echo PERSISTENCE=%PERSISTENCE%
+echo API=%API%
+pause
 
 cd /d "%ROOT%"
 
@@ -16,15 +21,14 @@ if "%~1" == "help" goto usage
 if "%~1" == "h" goto usage
 if "%~1" == "--help" goto usage
 
-if "%~1" == "add" goto 
+if "%~1" == "add" goto add
 if "%~1" == "update" goto update
 
 echo Comando desconocido: %~1
 goto usage
 
 :add
-echo add command.
-if "%~2" == ""(
+if "%~2" == "" (
 	echo Error: falta el nombre de la migracion.
 	goto usage
 )
@@ -32,7 +36,7 @@ dotnet ef migrations add "%~2" --project "%PERSISTENCE%" --startup-project "%API
 goto end
 
 :update
-if "%~2" == ""(
+if "%~2" == "" (
 	dotnet ef database update --project "%PERSISTENCE%" --startup-project "%API%"
 ) else (
 	dotnet ef database update "%~2" --project "%PERSISTENCE%" --startup-project "%API%"
