@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Properties.Application.UseCases.Properties.Queries.GetPropertiesList;
+using Properties.Application.UseCases.Properties.Commands.CreateProperty;
 using Properties.Application.Utilities.Mediator;
 using Properties.Application.Utilities.Pagination;
+using Properties.Api.DTOs;
 
 namespace Properties.Api.Controllers
 {
@@ -36,6 +38,46 @@ namespace Properties.Api.Controllers
 
             //return Ok(result);
             return StatusCode(StatusCodes.Status200OK, result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] CreatePropertyRequest request)
+        {
+            CreatePropertyCommand command = new()
+            {
+                OwnerId = request.OwnerId,
+                Title = request.Title,
+                Description = request.Description,
+                PriceAmount = request.PriceAmount,
+                CurrencyCode = request.CurrencyCode,
+                PropertyTypeId = request.PropertyTypeId,
+                NeighborhoodId = request.NeighborhoodId,
+                Address = new PropertyAddressInput
+                {
+                    MainRoadType = request.Address.MainRoadType,
+                    MainRoadNumber = request.Address.MainRoadNumber,
+                    MainRoadLetter = request.Address.MainRoadLetter,
+                    MainRoadSuffix = request.Address.MainRoadSuffix,
+                    CrossRoadNumber = request.Address.CrossRoadNumber,
+                    CrossRoadLetter = request.Address.CrossRoadLetter,
+                    CrossRoadSuffix = request.Address.CrossRoadSuffix,
+                    Plate = request.Address.Plate,
+                    Indications = request.Address.Indications,
+                    PostalCode = request.Address.PostalCode,
+                    Latitude = request.Address.Latitude,
+                    Longitude = request.Address.Longitude
+                },
+                Bedrooms = request.Bedrooms,
+                ParkingSpaces = request.ParkingSpaces,
+                Bathrooms = request.Bathrooms,
+                Stratum = request.Stratum,
+                Area = request.Area,
+                Condition = request.Condition,
+                Amenities = request.Amenities
+            };
+
+            Guid propertyId = await _mediator.Send(command);
+            return StatusCode(StatusCodes.Status201Created, new { id = propertyId });
         }
     }
 }
