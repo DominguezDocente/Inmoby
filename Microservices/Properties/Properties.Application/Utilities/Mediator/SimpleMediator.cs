@@ -1,8 +1,11 @@
-﻿using Properties.Application.Exceptions;
+﻿using FluentValidation;
+using FluentValidation.Results;
+using Properties.Application.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
+using System.Xml;
 
 namespace Properties.Application.Utilities.Mediator
 {
@@ -17,6 +20,8 @@ namespace Properties.Application.Utilities.Mediator
 
         public async Task<TResponse> Send<TResponse>(IRequest<TResponse> request)
         {
+            await ValidateRequestAsync(request).ConfigureAwait(false);
+
             Type useCaseType = typeof(IRequestHandler<,>).MakeGenericType(request.GetType(), typeof(TResponse));
 
             var useCase = _serviceProvider.GetService(useCaseType);
@@ -33,6 +38,8 @@ namespace Properties.Application.Utilities.Mediator
 
         public async Task Send(IRequest request)
         {
+            await ValidateRequestAsync(request).ConfigureAwait(false);
+
             Type useCaseType = typeof(IRequestHandler<>).MakeGenericType(request.GetType());
 
             var useCase = _serviceProvider.GetService(useCaseType);
@@ -45,6 +52,36 @@ namespace Properties.Application.Utilities.Mediator
             MethodInfo method = useCaseType.GetMethod("Handle")!;
 
             await(Task)method.Invoke(useCase, new object[] { request })!;
+        }
+
+        private async Task ValidateRequestAsync(object request)
+        {
+            Type requestType = request.GetType();
+            Type validatorType = typeof(IValidator<>).MakeGenericType(requestType);
+
+            object? validator = _serviceProvider.GetService(validatorType);
+
+            if (validator is null)
+            {
+                return;
+            }
+
+            if (validator is not null)
+            {
+                MethodInfo validatorMethod = validatorType.GetMethod("ValidateAsync")!;
+
+                Task validationTask = (Task)validatorMethod.Invoke(validator, new object[] { request, default })!;
+
+                await validationTask.ConfigureAwait(false);
+
+                PropertyInfo result = validationTask.GetType().GetProperty("Result")!;
+                ValidationResult validationResult = (ValidationResult)result!.GetValue(validationTask)!;
+
+                if (!validationResult.IsValid)
+                {
+                    throw new CustomValidationException(validationResult.Errors);
+                }
+            }
         }
     }
 }

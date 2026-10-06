@@ -1,8 +1,4 @@
 ﻿using Properties.Domain.Exceptions;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
 
 namespace Properties.Domain.Entities.Properties.ValueObjects
 {
@@ -34,7 +30,7 @@ namespace Properties.Domain.Entities.Properties.ValueObjects
 
         private Amenity()
         {
-            
+
         }
 
         private Amenity(string code, string name)
