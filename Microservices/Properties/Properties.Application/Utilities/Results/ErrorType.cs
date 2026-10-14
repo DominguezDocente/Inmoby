@@ -10,5 +10,6 @@ namespace Properties.Application.Utilities.Results
         Validation = 1,
         Business = 2,
         Unexpected = 3,
+        NotFound = 4,
     }
 }

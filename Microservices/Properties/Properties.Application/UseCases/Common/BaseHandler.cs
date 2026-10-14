@@ -27,7 +27,15 @@ namespace Properties.Application.UseCases.Common
                                                    Description: ex.Message,
                                                    Type: ErrorType.Business));
             }
-            catch(Exception ex)
+            catch (NotFoundException ex)
+            {
+                return Result<T>.Failure(new Error(Code: "BusinessRule.NotFound",
+                                                   Description: ex.Message,
+                                                   Type: ErrorType.NotFound));
+            }
+
+            // TODO: Implement logging for unexpected errors
+            catch (Exception ex)
             {
                 return Result<T>.Failure(new Error(Code: "Unexpected",
                                                    Description: "Unexpected error occurred",
@@ -39,6 +47,7 @@ namespace Properties.Application.UseCases.Common
         {
             try
             {
+                await action();
                 return Result.Success();
             }
             catch (CustomValidationException ex)
@@ -55,6 +64,14 @@ namespace Properties.Application.UseCases.Common
                                                    Description: ex.Message,
                                                    Type: ErrorType.Business));
             }
+            catch (NotFoundException ex)
+            {
+                return Result.Failure(new Error(Code: "BusinessRule.NotFound",
+                                                   Description: ex.Message,
+                                                   Type: ErrorType.NotFound));
+            }
+
+            // TODO: Implement logging for unexpected errors
             catch (Exception ex)
             {
                 return Result.Failure(new Error(Code: "Unexpected",

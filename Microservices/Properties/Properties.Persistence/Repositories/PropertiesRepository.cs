@@ -18,6 +18,35 @@ namespace Properties.Persistence.Repositories
             _context = context;
         }
 
+        // TODO: Remove images from bucket
+        public async Task<bool> DeleteWithImagesAsync(Guid id, CancellationToken cancellationToken = default)
+        {
+            Property? property = await _context.Set<Property>()
+                                       .Include(p => p.Images)
+                                       .FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
+
+            if (property is null)
+            {
+                return false;
+            }
+
+            _context.RemoveRange(property.Images);
+            _context.Remove(property);
+
+            return true;
+        }
+
+        public async Task<Property?> GetByIdWithDetailsAsync(Guid id, CancellationToken cancellationToken = default)
+        {
+            return await _context.Set<Property>().Include(p => p.PropertyType)
+                                                 .Include(p => p.Neighborhood)
+                                                   .ThenInclude(n => n.City)
+                                                 .Include(p => p.Amenities)
+                                                 .Include(p => p.Images)
+                                                 .AsSplitQuery()
+                                                 .FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
+        }
+
         public async Task<PaginationResponse<Property>> GetPagedListAsync(PaginationRequest request,
                                                                               Guid? propertyTypeId, 
                                                                               Guid? cityId, 

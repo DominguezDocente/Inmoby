@@ -138,6 +138,40 @@ namespace Properties.Domain.Entities.Properties
             NeighborhoodId = neighborhoodId;
         }
 
+        public void UpdatePropertyType(Guid propertyTypeId)
+        {
+            ApplyPropertyTypeRules(propertyTypeId);
+            PropertyTypeId = propertyTypeId;
+        }
+
+        public void UpdateDetails(PropertyDetails details)
+        {
+            ApplyDetailsRules(details);
+            Details = details;
+        }
+
+        public void UpdateAmenities(IEnumerable<Amenity> amenities)
+        {
+            if (amenities is null)
+            {
+                throw new BussinesRuleException("Las comodidades son requeridas.");
+            }
+
+            List<Amenity> newAmenities = amenities.ToList();
+
+            if (newAmenities.Any(amenity => amenity is null) || newAmenities.Distinct().Count() == 0)
+            {
+                throw new BussinesRuleException("Las comodidades no pueden ser nulas.");
+            }
+
+            _amenities.Clear();
+
+            foreach (Amenity amenity in amenities.Distinct())
+            {
+                AddAmenity(amenity);
+            }
+        }
+
         private void ApplyTitleRules(string title)
         {
             if (string.IsNullOrWhiteSpace(title))

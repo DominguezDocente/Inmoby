@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Properties.Api.DTOs.Properties;
 using Properties.Application.UseCases.Properties.Commands.CreateProperty;
+using Properties.Application.UseCases.Properties.Commands.UpdateProperty;
 using Properties.Application.UseCases.Properties.Queries.GetPropertiesList;
 using Properties.Application.Utilities.Mediator;
 using Properties.Application.Utilities.Pagination;
@@ -39,7 +40,7 @@ namespace Properties.Api.Controllers
 
             if (!result.IsSuccess)
             {
-                return BadRequest(result.Message);
+                return ToFailure(result);
             }
 
             //return Ok(result);
@@ -58,7 +59,8 @@ namespace Properties.Api.Controllers
                 CurrencyCode = request.CurrencyCode,
                 PropertyTypeId = request.PropertyTypeId,
                 NeighborhoodId = request.NeighborhoodId,
-                Address = new PropertyAddressInput
+
+                Address = new Application.UseCases.Properties.Commands.CreateProperty.PropertyAddressInput
                 {
                     MainRoadType = request.Address.MainRoadType,
                     MainRoadNumber = request.Address.MainRoadNumber,
@@ -73,6 +75,7 @@ namespace Properties.Api.Controllers
                     Latitude = request.Address.Latitude,
                     Longitude = request.Address.Longitude
                 },
+
                 Bedrooms = request.Bedrooms,
                 ParkingSpaces = request.ParkingSpaces,
                 Bathrooms = request.Bathrooms,
@@ -86,10 +89,68 @@ namespace Properties.Api.Controllers
 
             if (!result.IsSuccess)
             {
-                return BadRequest(result.Message);
+                return ToFailure(result);
             }
 
             return StatusCode(StatusCodes.Status201Created, new { id = result.Value });
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> Update([FromBody] UpdatePropertyDTO request)
+        {
+            UpdatePropertyCommand command = new()
+            {
+                Id = request.Id,
+                Title = request.Title,
+                Description = request.Description,
+                PriceAmount = request.PriceAmount,
+                CurrencyCode = request.CurrencyCode,
+                PropertyTypeId = request.PropertyTypeId,
+                NeighborhoodId = request.NeighborhoodId,
+
+                Address = new Application.UseCases.Properties.Commands.UpdateProperty.PropertyAddressInput
+                {
+                    MainRoadType = request.Address.MainRoadType,
+                    MainRoadNumber = request.Address.MainRoadNumber,
+                    MainRoadLetter = request.Address.MainRoadLetter,
+                    MainRoadSuffix = request.Address.MainRoadSuffix,
+                    CrossRoadNumber = request.Address.CrossRoadNumber,
+                    CrossRoadLetter = request.Address.CrossRoadLetter,
+                    CrossRoadSuffix = request.Address.CrossRoadSuffix,
+                    Plate = request.Address.Plate,
+                    Indications = request.Address.Indications,
+                    PostalCode = request.Address.PostalCode,
+                    Latitude = request.Address.Latitude,
+                    Longitude = request.Address.Longitude
+                },
+
+                Bedrooms = request.Bedrooms,
+                ParkingSpaces = request.ParkingSpaces,
+                Bathrooms = request.Bathrooms,
+                Stratum = request.Stratum,
+                Area = request.Area,
+                Condition = request.Condition,
+                Amenities = request.Amenities,
+                IsAvailable = request.IsAvailable
+            };
+
+            Result<Guid> result = await _mediator.Send(command);
+            return result.IsSuccess ? StatusCode(StatusCodes.Status204NoContent) : ToFailure(result);
+        }
+
+        private IActionResult ToFailure(Result result)
+        {
+            if (result.Errors.Any(error => error.Type is ErrorType.Validation or ErrorType.Business))
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, result.Errors);
+            }
+
+            if (result.Errors.Any(error => error.Type is ErrorType.NotFound))
+            {
+                return StatusCode(StatusCodes.Status404NotFound, result.Errors);
+            }
+
+            return StatusCode(StatusCodes.Status500InternalServerError, result.Errors);
         }
     }
 }

@@ -13,5 +13,11 @@ namespace Properties.Application.Contracts.Repositories
                                                                        Guid? cityId,
                                                                        int? Stratum,
                                                                        CancellationToken cancellationToken = default);
+
+        Task<Property?> GetByIdWithDetailsAsync(Guid id, CancellationToken cancellationToken = default);
+
+        Task<bool> DeleteWithImagesAsync(Guid id, CancellationToken cancellationToken = default);
+
+
     }
 }
