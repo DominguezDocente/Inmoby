@@ -20,6 +20,7 @@ namespace Properties.Application
 
             // Use Cases
             services.AddScoped<IRequestHandler<GetPropertiesListQuery, Result<PaginationResponse<PropertyListItemDTO>>>, GetPropertiesListUseCase>();
+            services.AddScoped<IRequestHandler<CreatePropertyCommand, Result<Guid>>, CreatePropertyUseCase>();
 
             // Validations
             services.AddValidatorsFromAssemblyContaining<CreatePropertyCommandValidator>();

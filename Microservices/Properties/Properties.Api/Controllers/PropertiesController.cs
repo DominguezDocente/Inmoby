@@ -45,6 +45,8 @@ namespace Properties.Api.Controllers
             //return Ok(result);
             return StatusCode(StatusCodes.Status200OK, result.Value);
         }
+
+        [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreatePropertyDTO request)
         {
             CreatePropertyCommand command = new()
