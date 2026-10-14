@@ -27,6 +27,12 @@ namespace Properties.Application.UseCases.Common
                                                    Description: ex.Message,
                                                    Type: ErrorType.Business));
             }
+            catch (NotFoundException ex)
+            {
+                return Result<T>.Failure(new Error(Code: "Resource.NotFound",
+                                                   Description: ex.Message,
+                                                   Type: ErrorType.NotFound));
+            }
             catch(Exception ex)
             {
                 return Result<T>.Failure(new Error(Code: "Unexpected",
@@ -39,6 +45,7 @@ namespace Properties.Application.UseCases.Common
         {
             try
             {
+                await action();
                 return Result.Success();
             }
             catch (CustomValidationException ex)
@@ -54,6 +61,12 @@ namespace Properties.Application.UseCases.Common
                 return Result.Failure(new Error(Code: "BusinessRule.Violation",
                                                    Description: ex.Message,
                                                    Type: ErrorType.Business));
+            }
+            catch (NotFoundException ex)
+            {
+                return Result.Failure(new Error(Code: "Resource.NotFound",
+                                                Description: ex.Message,
+                                                Type: ErrorType.NotFound));
             }
             catch (Exception ex)
             {

@@ -8,6 +8,9 @@ namespace Properties.Application.Contracts.Repositories
 {
     public interface IPropertiesRepository : IRepository<Property>
     {
+        Task<Property?> GetByIdWithDetailsAsync(Guid id, CancellationToken cancellationToken = default);
+        Task<bool> DeleteWithImagesAsync(Guid id, CancellationToken cancellationToken = default);
+
         Task<PaginationResponse<Property>> GetPagedListAsync(PaginationRequest request,
                                                                        Guid? PropertyTypeId,
                                                                        Guid? cityId,

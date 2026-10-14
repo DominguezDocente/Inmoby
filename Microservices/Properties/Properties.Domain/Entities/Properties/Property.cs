@@ -90,6 +90,40 @@ namespace Properties.Domain.Entities.Properties
             Address = address;
         }
 
+        public void UpdatePropertyType(Guid propertyTypeId)
+        {
+            ApplyPropertyTypeRules(propertyTypeId);
+            PropertyTypeId = propertyTypeId;
+        }
+
+        public void UpdateDetails(PropertyDetails details)
+        {
+            ApplyDetailsRules(details);
+            Details = details;
+        }
+
+        public void UpdateAmenities(IEnumerable<Amenity> amenities)
+        {
+            if (amenities is null)
+            {
+                throw new BussinesRuleException("La lista de comodidades es requerida.");
+            }
+
+            List<Amenity> newAmenities = amenities.ToList();
+            if (newAmenities.Any(amenity => amenity is null))
+            {
+                throw new BussinesRuleException("La comodidad es requerida.");
+            }
+
+            if (newAmenities.Select(amenity => amenity.Code).Distinct(StringComparer.OrdinalIgnoreCase).Count() != newAmenities.Count)
+            {
+                throw new BussinesRuleException("No se puede repetir una comodidad.");
+            }
+
+            _amenities.Clear();
+            _amenities.AddRange(newAmenities);
+        }
+
         public void MarkAsAvailable()
         {
             IsAvailable = true;

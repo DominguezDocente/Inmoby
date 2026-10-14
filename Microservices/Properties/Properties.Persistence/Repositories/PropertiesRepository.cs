@@ -18,6 +18,34 @@ namespace Properties.Persistence.Repositories
             _context = context;
         }
 
+        public Task<Property?> GetByIdWithDetailsAsync(Guid id, CancellationToken cancellationToken = default)
+        {
+            return _context.Set<Property>()
+                .Include(property => property.PropertyType)
+                .Include(property => property.Neighborhood)
+                    .ThenInclude(neighborhood => neighborhood.City)
+                .Include(property => property.Amenities)
+                .Include(property => property.Images)
+                .AsSplitQuery()
+                .SingleOrDefaultAsync(property => property.Id == id, cancellationToken);
+        }
+
+        public async Task<bool> DeleteWithImagesAsync(Guid id, CancellationToken cancellationToken = default)
+        {
+            Property? property = await _context.Set<Property>()
+                .Include(item => item.Images)
+                .SingleOrDefaultAsync(item => item.Id == id, cancellationToken);
+
+            if (property is null)
+            {
+                return false;
+            }
+
+            _context.RemoveRange(property.Images);
+            _context.Remove(property);
+            return true;
+        }
+
         public async Task<PaginationResponse<Property>> GetPagedListAsync(PaginationRequest request,
                                                                               Guid? propertyTypeId, 
                                                                               Guid? cityId, 
@@ -25,10 +53,11 @@ namespace Properties.Persistence.Repositories
                                                                               CancellationToken cancellationToken = default)
         {
             IQueryable<Property> query = _context.Set<Property>()
-                                                 .Include(p => p.PropertyTypeId)
-                                                 .Include(p => p.Neighborhood)
-                                                    .ThenInclude(n => n.CityId)
-                                                 .AsQueryable();
+                .AsNoTracking()
+                .Include(property => property.PropertyType)
+                .Include(property => property.Neighborhood)
+                    .ThenInclude(neighborhood => neighborhood.City)
+                .AsSplitQuery();
 
             if (propertyTypeId.HasValue)
             {

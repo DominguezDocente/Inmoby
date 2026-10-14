@@ -15,28 +15,31 @@ namespace Properties.Persistence.Repositories
             _context = context;
         }
 
-        public Task<T> CreateAsync(T entity, CancellationToken cancellationToken = default)
+        public async Task<T> CreateAsync(T entity, CancellationToken cancellationToken = default)
         {
-            _context.Add(entity);
-            return Task.FromResult(entity);
+            await _context.Set<T>().AddAsync(entity, cancellationToken);
+            return entity;
         }
 
-        public Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
+        public async Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            T entity = _context.Find<T>(id);
+            T? entity = await _context.Set<T>().FindAsync([id], cancellationToken);
+            if (entity is null)
+            {
+                throw new KeyNotFoundException($"No se encontró una entidad {typeof(T).Name} con id {id}.");
+            }
+
             _context.Remove(entity);
-            return Task.CompletedTask;
         }
 
-        public Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+        public async Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            T? entity = _context.Find<T>(id);
-            return Task.FromResult(entity);
+            return await _context.Set<T>().FindAsync([id], cancellationToken);
         }
 
         public async Task<IEnumerable<T>> GetListAsync(CancellationToken cancellationToken = default)
         {
-            return await _context.Set<T>().ToListAsync();
+            return await _context.Set<T>().ToListAsync(cancellationToken);
         }
 
         public Task<T> UpdateAsync(T entity, CancellationToken cancellationToken = default)
