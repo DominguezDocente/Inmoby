@@ -16,7 +16,7 @@ namespace Properties.Domain.Entities.Locations
         public State(string name, Guid countryId)
         {
             ApplyNameRules(name);
-            ApplyCountryIdRules(CountryId);
+            ApplyCountryIdRules(countryId);
             Name = name;
             CountryId = countryId;
         }

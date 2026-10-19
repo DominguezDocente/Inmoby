@@ -18,7 +18,7 @@ namespace Properties.Api.DTOs.Properties
         [MinLength(32)]
         public string Description { get; set; } = string.Empty;
 
-        [Range(typeof(decimal), "0.01", "9999999999999999.99")]
+        [Range(typeof(decimal), "0.01", "9999999999999999.99", ParseLimitsInInvariantCulture = true, ConvertValueInInvariantCulture = true)]
         public decimal PriceAmount { get; set; }
 
         [Required]

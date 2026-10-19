@@ -4,6 +4,7 @@ using Properties.Api.DTOs.Properties;
 using Properties.Application.UseCases.Properties.Commands.CreateProperty;
 using Properties.Application.UseCases.Properties.Commands.UpdateProperty;
 using Properties.Application.UseCases.Properties.Queries.GetPropertiesList;
+using Properties.Application.UseCases.Properties.Queries.GetPropertyById;
 using Properties.Application.Utilities.Mediator;
 using Properties.Application.Utilities.Pagination;
 using Properties.Application.Utilities.Results;
@@ -11,8 +12,7 @@ using Properties.Application.Utilities.Results;
 namespace Properties.Api.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
-    public class PropertiesController : ControllerBase
+    public class PropertiesController : ApiController
     {
         private readonly IMediator _mediator;
 
@@ -37,14 +37,22 @@ namespace Properties.Api.Controllers
             };
 
             Result<PaginationResponse<PropertyListItemDTO>> result = await _mediator.Send(query);
+           
+            return ToActionResult(result);
+        }
 
-            if (!result.IsSuccess)
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById([FromRoute] Guid id)
+        {
+            GetPropertyByIdQuery query = new()
             {
-                return ToFailure(result);
-            }
+                Id = id
+            };
 
-            //return Ok(result);
-            return StatusCode(StatusCodes.Status200OK, result.Value);
+            Result<PropertyDetailsDTO> result = await _mediator.Send(query);
+
+            return ToActionResult(result);
         }
 
         [HttpPost]
@@ -87,12 +95,7 @@ namespace Properties.Api.Controllers
 
             Result<Guid> result = await _mediator.Send(command);
 
-            if (!result.IsSuccess)
-            {
-                return ToFailure(result);
-            }
-
-            return StatusCode(StatusCodes.Status201Created, new { id = result.Value });
+            return ToActionResult(result, StatusCodes.Status201Created);
         }
 
         [HttpPut]
@@ -135,22 +138,8 @@ namespace Properties.Api.Controllers
             };
 
             Result<Guid> result = await _mediator.Send(command);
-            return result.IsSuccess ? StatusCode(StatusCodes.Status204NoContent) : ToFailure(result);
-        }
 
-        private IActionResult ToFailure(Result result)
-        {
-            if (result.Errors.Any(error => error.Type is ErrorType.Validation or ErrorType.Business))
-            {
-                return StatusCode(StatusCodes.Status400BadRequest, result.Errors);
-            }
-
-            if (result.Errors.Any(error => error.Type is ErrorType.NotFound))
-            {
-                return StatusCode(StatusCodes.Status404NotFound, result.Errors);
-            }
-
-            return StatusCode(StatusCodes.Status500InternalServerError, result.Errors);
+            return ToActionResult(result, StatusCodes.Status204NoContent);
         }
     }
 }

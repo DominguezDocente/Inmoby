@@ -54,9 +54,9 @@ namespace Properties.Persistence.Repositories
                                                                               CancellationToken cancellationToken = default)
         {
             IQueryable<Property> query = _context.Set<Property>()
-                                                 .Include(p => p.PropertyTypeId)
+                                                 .Include(p => p.PropertyType)
                                                  .Include(p => p.Neighborhood)
-                                                    .ThenInclude(n => n.CityId)
+                                                    .ThenInclude(n => n.City)
                                                  .AsQueryable();
 
             if (propertyTypeId.HasValue)
