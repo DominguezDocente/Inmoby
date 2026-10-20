@@ -14,18 +14,18 @@ namespace Properties.Domain.Entities.Locations
         public State State { get; private set; }
         public ICollection<Neighborhood> Neighborhoods { get; private set; } = new List<Neighborhood>();
 
-        public City(string name, Guid StateId)
+        public City(string name, Guid stateId)
         {
             ApplyNameRules(name);
-            ApplyStateIdRules(StateId);
+            ApplyStateIdRules(stateId);
             Name = name;
-            StateId = StateId;
+            StateId = stateId;
         }
 
-        public void UpdateStateId(Guid StateId)
+        public void UpdateStateId(Guid stateId)
         {
-            ApplyStateIdRules(StateId);
-            StateId = StateId;
+            ApplyStateIdRules(stateId);
+            StateId = stateId;
         }
 
         public void UpdateName(string name)
@@ -52,9 +52,9 @@ namespace Properties.Domain.Entities.Locations
             }
         }
 
-        private void ApplyStateIdRules(Guid StateId)
+        private void ApplyStateIdRules(Guid stateId)
         {
-            if (StateId == Guid.Empty)
+            if (stateId == Guid.Empty)
             {
                 throw new BussinesRuleException("El Id del estado es requerido.");
             }

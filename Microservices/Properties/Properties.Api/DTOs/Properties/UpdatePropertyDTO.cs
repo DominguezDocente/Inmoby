@@ -18,7 +18,7 @@ namespace Properties.Api.DTOs.Properties
         [MinLength(32)]
         public string Description { get; set; } = string.Empty;
 
-        [Range(typeof(decimal), "0.01", "9999999999999999.99")]
+        //[Range(typeof(decimal), "0.01", "9999999999999999.99")]
         public decimal PriceAmount { get; set; }
 
         [Required]
@@ -45,7 +45,7 @@ namespace Properties.Api.DTOs.Properties
         [Range(1, 6)]
         public int Stratum { get; set; }
 
-        [Range(typeof(double), "20.000000000000004", "1.7976931348623157E+308")]
+        //[Range(typeof(double), "20.000000000000004", "1.7976931348623157E+308")]
         public double Area { get; set; }
 
         [EnumDataType(typeof(PropertiCondition))]
