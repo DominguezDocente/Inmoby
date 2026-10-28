@@ -1,6 +1,9 @@
-@Properties.Api_HostAddress = http://localhost:5296
+@Properties.Api_HostAddress = https://localhost:7000
+@token = paste-access-token-here
 
-GET {{Properties.Api_HostAddress}}/weatherforecast/
+### List properties (requires a valid token issued by Identity)
+GET {{Properties.Api_HostAddress}}/api/properties
+Authorization: Bearer {{token}}
 Accept: application/json
 
 ###

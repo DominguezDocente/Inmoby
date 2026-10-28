@@ -1,0 +1,44 @@
+@Identity.App_HostAddress = https://localhost:7001
+@token = paste-access-token-here
+
+### Register a user
+POST {{Identity.App_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+  "firstName": "Ana",
+  "lastName": "García",
+  "document": "123456789",
+  "email": "student@example.com",
+  "password": "Classroom123!"
+}
+
+### Log in and copy accessToken from the response
+POST {{Identity.App_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "student@example.com",
+  "password": "Classroom123!"
+}
+
+### Call a protected endpoint
+GET {{Identity.App_HostAddress}}/api/auth/me
+Authorization: Bearer {{token}}
+
+### Admin: list users (token must contain the Admin role)
+GET {{Identity.App_HostAddress}}/api/users
+Authorization: Bearer {{token}}
+
+### Admin: list roles
+GET {{Identity.App_HostAddress}}/api/roles
+Authorization: Bearer {{token}}
+
+### Admin: create a role
+POST {{Identity.App_HostAddress}}/api/roles
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Agent"
+}

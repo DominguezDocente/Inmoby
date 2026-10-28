@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Properties.Api.DTOs.Properties;
 using Properties.Application.UseCases.Properties.Commands.CreateProperty;
 using Properties.Application.UseCases.Properties.Commands.UpdateProperty;
@@ -12,6 +13,7 @@ using Properties.Application.Utilities.Results;
 namespace Properties.Api.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     public class PropertiesController : ApiController
     {
         private readonly IMediator _mediator;
@@ -22,6 +24,7 @@ namespace Properties.Api.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetList([FromQuery] int pageNumber = 1,
                                                  [FromQuery] int pageSize = PaginationRequest.DEFAULT_PAGE_SIZE,
                                                  [FromQuery] Guid? propertyTypeId = null,
