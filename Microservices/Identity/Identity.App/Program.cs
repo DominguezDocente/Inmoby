@@ -27,6 +27,7 @@ builder.Services.AddIdentityCore<AppUser>(options =>
     options.Password.RequireUppercase = false;
     options.Password.RequireLowercase = false;
     options.Password.RequireNonAlphanumeric = false;
+    options.Lockout.MaxFailedAccessAttempts = 999;
 }).AddRoles<AppRole>()
   .AddEntityFrameworkStores<DataContext>()
   .AddSignInManager();
