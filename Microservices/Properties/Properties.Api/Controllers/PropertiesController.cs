@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Properties.Api.DTOs.Properties;
 using Properties.Application.UseCases.Properties.Commands.CreateProperty;
@@ -12,6 +13,7 @@ using Properties.Application.Utilities.Results;
 namespace Properties.Api.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     public class PropertiesController : ApiController
     {
         private readonly IMediator _mediator;
@@ -42,6 +44,7 @@ namespace Properties.Api.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> GetById([FromRoute] Guid id)
         {
             GetPropertyByIdQuery query = new()
