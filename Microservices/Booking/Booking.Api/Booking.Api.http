@@ -1,0 +1,63 @@
+@Booking.Api_HostAddress = http://localhost:5300
+@token = PEGAR_TOKEN_AQUI
+@propertyId = REEMPLAZAR_POR_ID_DE_INMUEBLE_REAL
+
+GET {{Booking.Api_HostAddress}}/api/Bookings?page=1&recordsPerPage=15
+Authorization: Bearer {{token}}
+Accept: application/json
+
+###
+
+POST {{Booking.Api_HostAddress}}/api/Bookings
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "propertyId": "{{propertyId}}",
+  "scheduledAt": "2026-12-01T15:00:00Z",
+  "durationMinutes": 30,
+  "notes": "Visita inicial"
+}
+
+###
+
+GET {{Booking.Api_HostAddress}}/api/Bookings/00000000-0000-0000-0000-000000000000
+Authorization: Bearer {{token}}
+Accept: application/json
+
+###
+
+PUT {{Booking.Api_HostAddress}}/api/Bookings/00000000-0000-0000-0000-000000000000
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "scheduledAt": "2026-12-02T16:00:00Z",
+  "durationMinutes": 45,
+  "notes": "Reprogramada"
+}
+
+###
+
+POST {{Booking.Api_HostAddress}}/api/Bookings/00000000-0000-0000-0000-000000000000/confirm
+Authorization: Bearer {{token}}
+
+###
+
+POST {{Booking.Api_HostAddress}}/api/Bookings/00000000-0000-0000-0000-000000000000/cancel
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "reason": "El usuario no puede asistir"
+}
+
+###
+
+POST {{Booking.Api_HostAddress}}/api/Bookings/00000000-0000-0000-0000-000000000000/complete
+Authorization: Bearer {{token}}
+
+###
+
+DELETE {{Booking.Api_HostAddress}}/api/Bookings/00000000-0000-0000-0000-000000000000
+Authorization: Bearer {{token}}

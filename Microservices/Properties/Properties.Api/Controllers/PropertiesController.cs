@@ -44,7 +44,7 @@ namespace Properties.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize(Roles = "Admin,User")]
+        [Authorize(Roles = "Admin,User,Properties Manager")]
         public async Task<IActionResult> GetById([FromRoute] Guid id)
         {
             GetPropertyByIdQuery query = new()

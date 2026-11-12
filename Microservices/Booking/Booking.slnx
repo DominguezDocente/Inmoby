@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/Presenters/">
+    <Project Path="Booking.Api/Booking.Api.csproj" />
+  </Folder>
+  <Folder Name="/scripts/">
+    <File Path="ef.cmd" />
+  </Folder>
+</Solution>

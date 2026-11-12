@@ -39,7 +39,7 @@ namespace Properties.Domain.Entities.Properties
                         string description, 
                         Currency price, 
                         Guid propertyTypeId, 
-                        Address address, bool isAvailable, 
+                        Address address,
                         PropertyDetails details,
                         Guid neighborhoodId)
         {
@@ -59,11 +59,10 @@ namespace Properties.Domain.Entities.Properties
             Price = price;
             PropertyTypeId = propertyTypeId;
             Address = address;
-            IsAvailable = isAvailable;
+            IsAvailable = true;
             CreatedAt = DateTime.UtcNow;
             Details = details;
             NeighborhoodId = neighborhoodId;
-            isAvailable = true;
         }
 
         public void UpdateTitle(string title)

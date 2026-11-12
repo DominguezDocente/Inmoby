@@ -15,6 +15,7 @@ namespace Properties.Application.UseCases.Properties.Queries.GetPropertyById
                 Title = property.Title,
                 Stratum = property.Details.Stratum,
                 Area = property.Details.Area,
+                IsAvailable = property.IsAvailable,
                 Bathrooms = property.Details.BathRooms,
                 Bedrooms = property.Details.Bedrooms,
                 CreatedAt = property.CreatedAt,

@@ -60,7 +60,6 @@ namespace Properties.Application.UseCases.Properties.Commands.CreateProperty
                     price,
                     command.PropertyTypeId,
                     address,
-                    isAvailable: true,
                     details,
                     command.NeighborhoodId);
 

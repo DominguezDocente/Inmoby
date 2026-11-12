@@ -27,6 +27,7 @@ namespace Properties.Application.UseCases.Properties.Queries.GetPropertyById
         public int Stratum { get; set; }
         public int Bathrooms { get; set; }
         public double Area { get; set; }
+        public bool IsAvailable { get; set; }
         public PropertiCondition Condition { get; set; }
         public DateTime CreatedAt { get; set; }
         public IReadOnlyCollection<string> Amenities { get; set; } = [];
