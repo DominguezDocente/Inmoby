@@ -25,6 +25,11 @@ namespace Properties.Persistence
 
             services.AddScoped<IUnitOfWork, EfCoreUnitOfWork>();
             services.AddScoped<IPropertiesRepository, PropertiesRepository>();
+            services.AddScoped<IPropertyTypesRepository, PropertyTypesRepository>();
+            services.AddScoped<ICountriesRepository, CountriesRepository>();
+            services.AddScoped<IStatesRepository, StatesRepository>();
+            services.AddScoped<ICitiesRepository, CitiesRepository>();
+            services.AddScoped<INeighborhoodsRepository, NeighborhoodsRepository>();
 
             // Seeders
             services.AddScoped<IDataSeeder, CountrySeeder>();
