@@ -22,7 +22,6 @@ namespace Properties.Application.UseCases.Properties.Commands.CreateProperty
             _unitOfWork = unitOfWork;
         }
 
-        // TODO: Add PropertyImages
         public async Task<Result<Guid>> Handle(CreatePropertyCommand command)
         {
             return await ExecuteAsync(async () =>
@@ -67,6 +66,13 @@ namespace Properties.Application.UseCases.Properties.Commands.CreateProperty
                 {
                     property.AddAmenity(Amenity.FromCode(amenityCode));
                 }
+
+                property.UpdateImages(command.Images.Select(image => new PropertyImage(
+                    property.Id,
+                    image.Url,
+                    image.Description,
+                    image.IsPrimary,
+                    image.DisplayOrder)));
 
                 await _propertiesRepository.CreateAsync(property);
                 await _unitOfWork.CommitAsync();

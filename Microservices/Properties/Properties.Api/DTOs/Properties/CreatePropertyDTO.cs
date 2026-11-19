@@ -51,6 +51,8 @@ namespace Properties.Api.DTOs.Properties
         public PropertiCondition Condition { get; set; }
 
         public List<string> Amenities { get; set; } = [];
+
+        public List<PropertyImageRequest> Images { get; set; } = [];
     }
 
     public sealed class PropertyAddressRequest : IValidatableObject

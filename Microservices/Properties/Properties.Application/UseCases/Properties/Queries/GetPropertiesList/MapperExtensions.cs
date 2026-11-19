@@ -26,6 +26,10 @@ namespace Properties.Application.UseCases.Properties.Queries.GetPropertiesList
                 PropertyTypeName = property.PropertyType.Name,
                 CityName = property.Neighborhood!.City.Name,
                 CityId = property.Neighborhood.CityId,
+                PrimaryImageUrl = property.Images.OrderByDescending(image => image.IsPrimary)
+                                                 .ThenBy(image => image.DisplayOrder)
+                                                 .Select(image => image.Url)
+                                                 .FirstOrDefault(),
             };
         }
     }

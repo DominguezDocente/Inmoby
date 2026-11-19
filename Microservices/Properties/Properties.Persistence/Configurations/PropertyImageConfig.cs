@@ -29,7 +29,7 @@ namespace Properties.Persistence.Configurations
             builder.HasOne(pi => pi.Property)
                   .WithMany(p => p.Images)
                   .HasForeignKey(p => p.PropertyId)
-                  .OnDelete(DeleteBehavior.Restrict);
+                  .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

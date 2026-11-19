@@ -71,6 +71,13 @@ namespace Properties.Application.UseCases.Properties.Commands.UpdateProperty
                 property.UpdateNeighborhood(command.NeighborhoodId);
                 property.UpdateAmenities(command.Amenities.Select(Amenity.FromCode));
 
+                property.UpdateImages(command.Images.Select(image => new PropertyImage(
+                    property.Id,
+                    image.Url,
+                    image.Description,
+                    image.IsPrimary,
+                    image.DisplayOrder)));
+
                 if (command.IsAvailable)
                 {
                     property.MarkAsAvailable();
@@ -81,6 +88,8 @@ namespace Properties.Application.UseCases.Properties.Commands.UpdateProperty
                 }
 
                 await _propertiesRepository.UpdateAsync(property);
+                // Update() marca el grafo como Modified; las imagenes nuevas deben quedar como Added.
+                await _propertiesRepository.AddImagesAsync(property.Images);
                 await _unitOfWork.CommitAsync();
 
 

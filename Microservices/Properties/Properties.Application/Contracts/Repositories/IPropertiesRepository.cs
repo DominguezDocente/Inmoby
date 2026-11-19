@@ -16,6 +16,8 @@ namespace Properties.Application.Contracts.Repositories
 
         Task<Property?> GetByIdWithDetailsAsync(Guid id, CancellationToken cancellationToken = default);
 
+        Task AddImagesAsync(IEnumerable<PropertyImage> images, CancellationToken cancellationToken = default);
+
         Task<bool> DeleteWithImagesAsync(Guid id, CancellationToken cancellationToken = default);
 
 

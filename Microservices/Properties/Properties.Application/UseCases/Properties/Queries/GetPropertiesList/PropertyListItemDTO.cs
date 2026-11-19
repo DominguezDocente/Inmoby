@@ -22,6 +22,7 @@ namespace Properties.Application.UseCases.Properties.Queries.GetPropertiesList
         public int Stratum { get;init; }
         public double Area { get;init; }
         public bool IsAvailable { get;init; }
+        public string? PrimaryImageUrl { get; init; }
         public DateTime CreatedAt { get;init; }
     }
 }

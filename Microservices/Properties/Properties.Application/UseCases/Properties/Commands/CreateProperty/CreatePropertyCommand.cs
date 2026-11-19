@@ -21,6 +21,7 @@ namespace Properties.Application.UseCases.Properties.Commands.CreateProperty
         public double Area { get; set; }
         public PropertiCondition Condition { get; set; }
         public List<string> Amenities { get; set; }
+        public List<PropertyImageInput> Images { get; set; } = [];
         public PropertyAddressInput Address { get; set; } = new();
     }
 

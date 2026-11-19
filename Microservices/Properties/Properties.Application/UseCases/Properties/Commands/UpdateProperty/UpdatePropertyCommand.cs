@@ -1,5 +1,6 @@
 ﻿using Properties.Application.Contracts.Persistence;
 using Properties.Application.Contracts.Repositories;
+using Properties.Application.UseCases.Properties.Commands.CreateProperty;
 using Properties.Application.Utilities.Mediator;
 using Properties.Application.Utilities.Results;
 using Properties.Domain.Common.ValueObjects;
@@ -27,6 +28,7 @@ namespace Properties.Application.UseCases.Properties.Commands.UpdateProperty
         public PropertiCondition Condition { get; set; }
         public List<string> Amenities { get; set; }
         public bool IsAvailable { get; set; }
+        public List<PropertyImageInput> Images { get; set; } = [];
         public PropertyAddressInput Address { get; set; } = new();
     }
 

@@ -53,6 +53,8 @@ namespace Properties.Api.DTOs.Properties
 
         public List<string> Amenities { get; set; } = [];
 
+        public List<PropertyImageRequest> Images { get; set; } = [];
+
         [Required]
         public bool IsAvailable { get; set; }
     }

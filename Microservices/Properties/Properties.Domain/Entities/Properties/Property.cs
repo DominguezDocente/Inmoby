@@ -149,6 +149,40 @@ namespace Properties.Domain.Entities.Properties
             Details = details;
         }
 
+        public void UpdateImages(IEnumerable<PropertyImage> images)
+        {
+            if (images is null)
+            {
+                throw new BussinesRuleException("Las imagenes son requeridas.");
+            }
+
+            List<PropertyImage> newImages = images.ToList();
+
+            if (newImages.Count > 0)
+            {
+                PropertyImage primary = newImages.FirstOrDefault(image => image.IsPrimary) ?? newImages[0];
+
+                foreach (PropertyImage image in newImages)
+                {
+                    if (image == primary)
+                    {
+                        image.MarkAsPrimary();
+                    }
+                    else
+                    {
+                        image.UnmarkAsPrimary();
+                    }
+                }
+            }
+
+            Images.Clear();
+
+            foreach (PropertyImage image in newImages)
+            {
+                Images.Add(image);
+            }
+        }
+
         public void UpdateAmenities(IEnumerable<Amenity> amenities)
         {
             if (amenities is null)

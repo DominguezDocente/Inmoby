@@ -92,7 +92,14 @@ namespace Properties.Api.Controllers
                 Stratum = request.Stratum,
                 Area = request.Area,
                 Condition = request.Condition,
-                Amenities = request.Amenities
+                Amenities = request.Amenities,
+                Images = (request.Images ?? []).Select(image => new Application.UseCases.Properties.Commands.CreateProperty.PropertyImageInput
+                {
+                    Url = image.Url,
+                    Description = image.Description,
+                    IsPrimary = image.IsPrimary,
+                    DisplayOrder = image.DisplayOrder
+                }).ToList()
             };
 
             Result<Guid> result = await _mediator.Send(command);
@@ -136,6 +143,13 @@ namespace Properties.Api.Controllers
                 Area = request.Area,
                 Condition = request.Condition,
                 Amenities = request.Amenities,
+                Images = (request.Images ?? []).Select(image => new Application.UseCases.Properties.Commands.CreateProperty.PropertyImageInput
+                {
+                    Url = image.Url,
+                    Description = image.Description,
+                    IsPrimary = image.IsPrimary,
+                    DisplayOrder = image.DisplayOrder
+                }).ToList(),
                 IsAvailable = request.IsAvailable
             };
 

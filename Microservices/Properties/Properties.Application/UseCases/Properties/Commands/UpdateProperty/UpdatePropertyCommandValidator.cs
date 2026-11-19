@@ -45,6 +45,8 @@ namespace Properties.Application.UseCases.Properties.Commands.UpdateProperty
             RuleForEach(cmd => cmd.Amenities).NotEmpty().WithMessage("La comodidad es requerida")
                                              .Must(IsSupportedAmenity).WithMessage("Uno de los códigos de comodidad no es válido.");
 
+            RuleForEach(cmd => cmd.Images).SetValidator(new PropertyImageInputValidator());
+
             RuleFor(cmd => cmd.Address).NotNull().WithMessage("La dirección es requerida.")
                                        .SetValidator(new PropertyAddressInputValidator());
         }

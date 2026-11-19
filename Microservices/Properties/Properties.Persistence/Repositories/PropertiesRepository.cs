@@ -33,6 +33,12 @@ namespace Properties.Persistence.Repositories
             return true;
         }
 
+        public Task AddImagesAsync(IEnumerable<PropertyImage> images, CancellationToken cancellationToken = default)
+        {
+            _context.Set<PropertyImage>().AddRange(images);
+            return Task.CompletedTask;
+        }
+
         public async Task<Property?> GetByIdWithDetailsAsync(Guid id, CancellationToken cancellationToken = default)
         {
             return await _context.Set<Property>().Include(p => p.PropertyType)
@@ -54,6 +60,8 @@ namespace Properties.Persistence.Repositories
                                                  .Include(p => p.PropertyType)
                                                  .Include(p => p.Neighborhood)
                                                     .ThenInclude(n => n.City)
+                                                 .Include(p => p.Images)
+                                                 .AsSplitQuery()
                                                  .AsQueryable();
 
             if (propertyTypeId.HasValue)
