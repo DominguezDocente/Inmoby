@@ -64,7 +64,7 @@ namespace Properties.Application.UseCases.Properties.Commands.CreateProperty
                     details,
                     command.NeighborhoodId);
 
-                foreach (string amenityCode in command.Amenities)
+                foreach (string amenityCode in command.Amenities ?? [])
                 {
                     property.AddAmenity(Amenity.FromCode(amenityCode));
                 }

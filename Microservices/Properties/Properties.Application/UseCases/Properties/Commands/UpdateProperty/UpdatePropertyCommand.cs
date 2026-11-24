@@ -25,7 +25,7 @@ namespace Properties.Application.UseCases.Properties.Commands.UpdateProperty
         public int Bathrooms { get; set; }
         public double Area { get; set; }
         public PropertiCondition Condition { get; set; }
-        public List<string> Amenities { get; set; }
+        public List<string>? Amenities { get; set; }
         public bool IsAvailable { get; set; }
         public PropertyAddressInput Address { get; set; } = new();
     }

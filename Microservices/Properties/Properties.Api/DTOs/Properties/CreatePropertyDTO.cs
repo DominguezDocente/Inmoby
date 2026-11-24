@@ -50,7 +50,7 @@ namespace Properties.Api.DTOs.Properties
         [EnumDataType(typeof(PropertiCondition))]
         public PropertiCondition Condition { get; set; }
 
-        public List<string> Amenities { get; set; } = [];
+        public List<string>? Amenities { get; set; } = [];
     }
 
     public sealed class PropertyAddressRequest : IValidatableObject

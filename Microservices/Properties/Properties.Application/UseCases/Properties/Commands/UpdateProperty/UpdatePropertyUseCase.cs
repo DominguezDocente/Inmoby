@@ -69,7 +69,7 @@ namespace Properties.Application.UseCases.Properties.Commands.UpdateProperty
                 property.UpdatePrice(price);
                 property.UpdatePropertyType(command.PropertyTypeId);
                 property.UpdateNeighborhood(command.NeighborhoodId);
-                property.UpdateAmenities(command.Amenities.Select(Amenity.FromCode));
+                property.UpdateAmenities((command.Amenities ?? []).Select(Amenity.FromCode));
 
                 if (command.IsAvailable)
                 {

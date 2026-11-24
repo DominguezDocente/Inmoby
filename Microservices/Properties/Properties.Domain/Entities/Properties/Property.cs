@@ -150,21 +150,14 @@ namespace Properties.Domain.Entities.Properties
             Details = details;
         }
 
-        public void UpdateAmenities(IEnumerable<Amenity> amenities)
+        public void UpdateAmenities(IEnumerable<Amenity>? amenities)
         {
+            _amenities.Clear();
+
             if (amenities is null)
             {
-                throw new BussinesRuleException("Las comodidades son requeridas.");
+                return;
             }
-
-            List<Amenity> newAmenities = amenities.ToList();
-
-            if (newAmenities.Any(amenity => amenity is null) || newAmenities.Distinct().Count() == 0)
-            {
-                throw new BussinesRuleException("Las comodidades no pueden ser nulas.");
-            }
-
-            _amenities.Clear();
 
             foreach (Amenity amenity in amenities.Distinct())
             {

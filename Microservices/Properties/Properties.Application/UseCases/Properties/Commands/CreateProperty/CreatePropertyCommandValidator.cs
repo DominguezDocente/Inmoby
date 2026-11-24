@@ -38,11 +38,13 @@ namespace Properties.Application.UseCases.Properties.Commands.CreateProperty
 
             RuleFor(command => command.Condition).IsInEnum().WithMessage("La condición de la propiedad no es válida.");
 
-            RuleFor(cmd => cmd.Amenities).NotNull().WithMessage("Las comodidades son requeridas.")
-                                         .Must(HaveUniqueAmenities).WithMessage("No se puede repetir una comodidad.");
+            RuleFor(cmd => cmd.Amenities).Must(HaveUniqueAmenities)
+                                         .WithMessage("No se puede repetir una comodidad.")
+                                         .When(cmd => cmd.Amenities is not null);
 
             RuleForEach(cmd => cmd.Amenities).NotEmpty().WithMessage("La comodidad es requerida")
-                                             .Must(IsSupportedAmenity).WithMessage("Uno de los códigos de comodidad no es válido.");
+                                             .Must(IsSupportedAmenity).WithMessage("Uno de los códigos de comodidad no es válido.")
+                                             .When(cmd => cmd.Amenities is not null);
 
             RuleFor(cmd => cmd.Address).NotNull().WithMessage("La dirección es requerida.")
                                        .SetValidator(new PropertyAddressInputValidator());
@@ -75,7 +77,7 @@ namespace Properties.Application.UseCases.Properties.Commands.CreateProperty
         {
             if (codes is null)
             {
-                return false;
+                return true;
             }
 
             IEnumerable<string> normalizedCodes = codes.Where(code => !string.IsNullOrWhiteSpace(code))
